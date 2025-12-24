@@ -49,7 +49,7 @@ stages:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            workingDirectory: $(System.DefaultWorkingDirectory)/dev
+            workingDirectory: $(System.DefaultWorkingDirectory)/env/dev
             script: |
               # Write your tflint commands here.
               tflint --recursive
@@ -62,7 +62,7 @@ stages:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            workingDirectory: $(System.DefaultWorkingDirectory)/dev
+            workingDirectory: $(System.DefaultWorkingDirectory)/env/dev
             script: |
               # Write your  tfsec commands here.
               tfsec
@@ -74,7 +74,7 @@ stages:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            workingDirectory: $(System.DefaultWorkingDirectory)/dev
+            workingDirectory: $(System.DefaultWorkingDirectory)/env/dev
             script: |
               # Write your trivy commands here.
               trivy config .
