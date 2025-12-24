@@ -13,6 +13,11 @@ resource "azurerm_network_security_group" "vm_nsg" {
   name                = each.value.name
   location            = each.value.location
   resource_group_name = each.value.resource_group_name
+    timeouts {
+      create = "30m"
+      update = "30m"
+      delete = "30m"
+    }
 }
 
 # Allow SSH
