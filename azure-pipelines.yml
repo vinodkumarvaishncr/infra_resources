@@ -66,30 +66,30 @@ stages:
           workingDirectory: $(filepath)
           environmentServiceNameAzureRM: infra_conn
 
-  - stage: "stage3_apply"
-    dependsOn:  
-      - infraPlan
+  # - stage: "stage3_apply"
+  #   dependsOn:  
+  #     - infraPlan
       
-    jobs:
-      - job: "terrafomr_apply"
-        displayName: "apply"
-        steps:
-        - task: TerraformInstaller@1
-          inputs:
-            terraformVersion: 'latest' 
+  #   jobs:
+  #     - job: "terrafomr_apply"
+  #       displayName: "apply"
+  #       steps:
+  #       - task: TerraformInstaller@1
+  #         inputs:
+  #           terraformVersion: 'latest' 
         
-        - template: templates/terraform-init.yml
-          parameters:
-            workingDirectory: $(filepath)
-            backendServiceArm: infra_conn
-            storageAccountName: vinodstoragemaina
-            containerName: container22
-            stateFileKey: $(state_file_name)
+  #       - template: templates/terraform-init.yml
+  #         parameters:
+  #           workingDirectory: $(filepath)
+  #           backendServiceArm: infra_conn
+  #           storageAccountName: vinodstoragemaina
+  #           containerName: container22
+  #           stateFileKey: $(state_file_name)
 
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'apply'
-            workingDirectory: $(filepath)
-            commandOptions: '-auto-approve'
-            environmentServiceNameAzureRM: 'infra_conn'
+  #       - task: TerraformTask@5
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'apply'
+  #           workingDirectory: $(filepath)
+  #           commandOptions: '-auto-approve'
+  #           environmentServiceNameAzureRM: 'infra_conn'
