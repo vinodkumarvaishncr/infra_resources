@@ -17,7 +17,7 @@ stages:
   - stage: "Stage1_download_init_validate"
     jobs:
       - job: infra_install
-        displayName : "infra_install"
+        displayName : "Terraform Init"
         steps:
         - task: TerraformInstaller@1
           inputs:
@@ -84,7 +84,7 @@ stages:
     dependsOn: "Security_Tools"
     jobs:
       - job: "cost_infra"
-        displayName: "costtt"
+        displayName: "Infra cost"
         steps:
         - task: TerraformInstaller@1
           inputs:
@@ -113,7 +113,7 @@ stages:
 
   - stage: infraPlan
     displayName: "Terraform Plan"
-    dependsOn: Stage1_download_init_validate
+    dependsOn: "infraCost"
     jobs:
     - job: terraform_plan
       displayName: "Terraform Plan"
