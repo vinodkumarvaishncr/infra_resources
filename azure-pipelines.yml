@@ -1,0 +1,96 @@
+trigger:
+  - none
+
+pool: 
+  name: "agent1_pool"
+
+variables:
+- group: global_variable   # contains INFRACOST_API_KEY secret variable
+- name: state_file_name
+  value: vinodinfra.tfstate
+- name: filepath
+  value: $(System.DefaultWorkingDirectory)/env/dev
+- name: TF_INPUT
+  value: false
+
+stages:
+  - stage: "Stage1_download_init_validate"
+    jobs:
+      - job: infra_install
+        displayName : "infra_install"
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+
+        - template: templates/terraform-init.yml
+          parameters:
+            workingDirectory: $(filepath)
+            backendServiceArm: infra_conn
+            storageAccountName: vinodstoragemaina
+            containerName: container22
+            stateFileKey: $(state_file_name)
+       
+
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: $(filepath)
+
+  
+
+  - stage: infraPlan
+    displayName: "Terraform Plan"
+    dependsOn: infraCost
+    jobs:
+    - job: terraform_plan
+      displayName: "Terraform Plan"
+      steps:
+      - task: TerraformInstaller@1
+        inputs:
+         terraformVersion: 'latest'
+
+      - template: templates/terraform-init.yml
+        parameters:
+          workingDirectory: $(filepath)
+          backendServiceArm: infra_conn
+          storageAccountName: vinodstoragemaina
+          containerName: container22
+          stateFileKey: $(state_file_name)
+
+      - task: TerraformTask@5
+        inputs:
+          provider: azurerm
+          command: plan
+          workingDirectory: $(filepath)
+          environmentServiceNameAzureRM: infra_conn
+
+  - stage: "stage3_apply"
+    dependsOn:  
+      - infraPlan
+      - Security_Tools
+      - infraCost
+    jobs:
+      - job: "terrafomr_apply"
+        displayName: "apply"
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest' 
+        
+        - template: templates/terraform-init.yml
+          parameters:
+            workingDirectory: $(filepath)
+            backendServiceArm: infra_conn
+            storageAccountName: vinodstoragemaina
+            containerName: container22
+            stateFileKey: $(state_file_name)
+
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: $(filepath)
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'infra_conn'
