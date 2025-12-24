@@ -42,7 +42,7 @@ stages:
 
   - stage: infraPlan
     displayName: "Terraform Plan"
-    dependsOn: infraCost
+    dependsOn: Stage1_download_init_validate
     jobs:
     - job: terraform_plan
       displayName: "Terraform Plan"
@@ -69,8 +69,7 @@ stages:
   - stage: "stage3_apply"
     dependsOn:  
       - infraPlan
-      - Security_Tools
-      - infraCost
+      
     jobs:
       - job: "terrafomr_apply"
         displayName: "apply"
