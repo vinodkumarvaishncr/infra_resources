@@ -43,7 +43,7 @@ stages:
     dependsOn: "Stage1_download_init_validate"
     jobs:
       - job: "tflint"
-        displayName: "tflint"
+        displayName: "TF lint"
         continueOnError: true
         steps:
         - task: PowerShell@2
@@ -56,7 +56,7 @@ stages:
 
      
       - job: "tfsecccc"
-        displayName: "tfsec"
+        displayName: "TF sec"
         continueOnError: true
         steps:
         - task: PowerShell@2
@@ -67,9 +67,22 @@ stages:
               # Write your  tfsec commands here.
               tfsec
 
+      - job: "terrascan"
+        displayName: "Terra Scan"
+        continueOnError: true
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            script: 'terrascan scan'
+            
+
+        
+        
      
       - job: "trivy"
-        displayName: "trivy scan"
+        displayName: "Trivy Scan"
         steps:
         - task: PowerShell@2
           inputs:
