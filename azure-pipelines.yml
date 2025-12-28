@@ -150,29 +150,44 @@ stages:
           workingDirectory: $(filepath)
           environmentServiceNameAzureRM: infra_conn
 
-  - stage: "stage3_apply"
+  - stage: "manual_validation"
     dependsOn: "infraPlan"
-      
     jobs:
-      - job: "terrafomr_apply"
-        displayName: "apply"
+      - job: "manual_validation"
+        displayName: "Manual validation"
+        pool: server   # ✅ REQUIRED
         steps:
-        - task: TerraformInstaller@1
+        - task: ManualValidation@1
           inputs:
-            terraformVersion: 'latest' 
-        
-        - template: templates/terraform-init.yml
-          parameters:
-            workingDirectory: $(filepath)
-            backendServiceArm: infra_conn
-            storageAccountName: vinodstoragemaina
-            containerName: container22
-            stateFileKey: $(state_file_name)
+            notifyUsers: 'vinodkumarvaishncr@gmail.com'
+            approvers: |
+              Please review the Terraform plan output.
+               Approve to continue or Reject to stop the pipeline.
+            
 
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'apply'
-            workingDirectory: $(filepath)
-            commandOptions: '-auto-approve'
-            environmentServiceNameAzureRM: 'infra_conn'
+  # - stage: "stage3_apply"
+  #   dependsOn: "manual_validation"
+      
+  #   jobs:
+  #     - job: "terrafomr_apply"
+  #       displayName: "apply"
+  #       steps:
+  #       - task: TerraformInstaller@1
+  #         inputs:
+  #           terraformVersion: 'latest' 
+        
+  #       - template: templates/terraform-init.yml
+  #         parameters:
+  #           workingDirectory: $(filepath)
+  #           backendServiceArm: infra_conn
+  #           storageAccountName: vinodstoragemaina
+  #           containerName: container22
+  #           stateFileKey: $(state_file_name)
+
+  #       - task: TerraformTask@5
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'apply'
+  #           workingDirectory: $(filepath)
+  #           commandOptions: '-auto-approve'
+  #           environmentServiceNameAzureRM: 'infra_conn'
