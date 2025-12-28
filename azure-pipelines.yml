@@ -159,13 +159,10 @@ stages:
         steps:
         - task: ManualValidation@1
           inputs:
+            notifyUsers: 'vinodkumarvaishncr@gmail.com'
             approvers: |
               Please review the Terraform plan output.
                Approve to continue or Reject to stop the pipeline.
-            notifyUsers: |
-              vinodkumarvaishncr@gmail.com
-            onTimeout: reject
-            timeoutInMinutes: 500
             
 
   # - stage: "stage3_apply"
