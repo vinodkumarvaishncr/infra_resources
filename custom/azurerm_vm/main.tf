@@ -7,7 +7,7 @@ data "azurerm_network_interface" "nic" {
 
 # Reference to existing Key Vault
 data "azurerm_key_vault" "keyvault" {
-  name                = "vinodkeyvault2"
+  name                = "vinodkeyvault22"
   resource_group_name = "vinod_main_rg"
 }
 # Read a secret vm username

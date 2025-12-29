@@ -1,7 +1,7 @@
 
 # Reference to existing Key Vault
 data "azurerm_key_vault" "mssqlkeyvault" {
-  name                = "vinodkeyvault2"
+  name                = "vinodkeyvault22"
   resource_group_name = "vinod_main_rg"
 }
 # Read a secret mssql username
