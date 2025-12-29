@@ -160,8 +160,7 @@ stages:
       steps:
         - task: ManualValidation@1
           inputs:
-            notifyUsers: |
-              vinodkumarvaishncr@gmail.com
+            notifyUsers: 'vinodkumarvaishncr@gmail.com'
             instructions: |
               Please review the Terraform plan output.
               Approve to continue or Reject to stop the pipeline.
