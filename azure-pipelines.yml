@@ -124,34 +124,34 @@ stages:
                infracost breakdown --path=.
             workingDirectory: $(filepath)
 
-  # - stage: infraPlan
-  #   displayName: "Terraform Plan"
-  #   dependsOn: "infraCost"
-  #   jobs:
-  #   - job: terraform_plan
-  #     displayName: "Terraform Plan"
-  #     steps:
-  #     - task: TerraformInstaller@1
-  #       inputs:
-  #        terraformVersion: 'latest'
+  - stage: infraPlan
+    displayName: "Terraform Plan"
+    dependsOn: "infraCost"
+    jobs:
+    - job: terraform_plan
+      displayName: "Terraform Plan"
+      steps:
+      - task: TerraformInstaller@1
+        inputs:
+         terraformVersion: 'latest'
 
-  #     - template: templates/terraform-init.yml
-  #       parameters:
-  #         workingDirectory: $(filepath)
-  #         backendServiceArm: infra_conn
-  #         storageAccountName: vinodstoragemaina
-  #         containerName: container22
-  #         stateFileKey: $(state_file_name)
+      - template: templates/terraform-init.yml
+        parameters:
+          workingDirectory: $(filepath)
+          backendServiceArm: infra_conn
+          storageAccountName: vinodstoragemaina
+          containerName: container22
+          stateFileKey: $(state_file_name)
 
-  #     - task: TerraformTask@5
-  #       inputs:
-  #         provider: azurerm
-  #         command: plan
-  #         workingDirectory: $(filepath)
-  #         environmentServiceNameAzureRM: infra_conn
+      - task: TerraformTask@5
+        inputs:
+          provider: azurerm
+          command: plan
+          workingDirectory: $(filepath)
+          environmentServiceNameAzureRM: infra_conn
 
   - stage: manual_validation
-    
+    dependsOn: "infraPlan"
     displayName: Manual Validation
     jobs:
     - job: manual_validation
@@ -169,29 +169,29 @@ stages:
 
             
 
-  # - stage: "stage3_apply"
-  #   dependsOn: "manual_validation"
+  - stage: "stage3_apply"
+    dependsOn: "manual_validation"
       
-  #   jobs:
-  #     - job: "terrafomr_apply"
-  #       displayName: "apply"
-  #       steps:
-  #       - task: TerraformInstaller@1
-  #         inputs:
-  #           terraformVersion: 'latest' 
+    jobs:
+      - job: "terrafomr_apply"
+        displayName: "apply"
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest' 
         
-  #       - template: templates/terraform-init.yml
-  #         parameters:
-  #           workingDirectory: $(filepath)
-  #           backendServiceArm: infra_conn
-  #           storageAccountName: vinodstoragemaina
-  #           containerName: container22
-  #           stateFileKey: $(state_file_name)
+        - template: templates/terraform-init.yml
+          parameters:
+            workingDirectory: $(filepath)
+            backendServiceArm: infra_conn
+            storageAccountName: vinodstoragemaina
+            containerName: container22
+            stateFileKey: $(state_file_name)
 
-  #       - task: TerraformTask@5
-  #         inputs:
-  #           provider: 'azurerm'
-  #           command: 'apply'
-  #           workingDirectory: $(filepath)
-  #           commandOptions: '-auto-approve'
-  #           environmentServiceNameAzureRM: 'infra_conn'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: $(filepath)
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'infra_conn'
