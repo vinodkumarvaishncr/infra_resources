@@ -15,6 +15,7 @@ variables:
 
 stages:
   - stage: "Stage1_download_init_validate"
+    displayName: "Terraform Init & Validate"
     jobs:
       - job: infra_install
         displayName : "Terraform Init"
@@ -76,11 +77,7 @@ stages:
             targetType: 'inline'
             workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
             script: 'terrascan scan'
-            
-
-        
-        
-     
+      
       - job: "trivy"
         displayName: "Trivy Scan"
         steps:
@@ -171,7 +168,7 @@ stages:
 
   - stage: "stage3_apply"
     dependsOn: "manual_validation"
-      
+    displayName: "Terraform Apply"  
     jobs:
       - job: "terrafomr_apply"
         displayName: "apply"
