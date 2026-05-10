@@ -2,7 +2,7 @@ trigger:
   - none
 
 pool: 
-  name: "agent1_pool"
+  name: "agent2_pool"
 
 variables:
 - group: global_variable   # contains INFRACOST_API_KEY secret variable
